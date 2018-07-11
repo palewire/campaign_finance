@@ -17,8 +17,8 @@ def clean(s):
     s = s.strip(',')
     return s.lower()
 
-def dummy(s):
-    return s
+def to_int(s):
+    return int(s)
 
 # Ballot Measure Items and Loaders
 class Election(scrapy.Item):
@@ -29,25 +29,24 @@ class Election(scrapy.Item):
 class ElectionLoader(ItemLoader):
     default_item_class = Election
     election_in = MapCompose(clean)
-    no_measures_in = Compose(dummy)
+    no_measures_in = Compose()
     measures_in = MapCompose(clean)
 
-class Committee(scrapy.Item):
-    committee_id = scrapy.Field()
+class Measure(scrapy.Item):
     committee_name = scrapy.Field()
     measure_name = scrapy.Field()
     measure_id = scrapy.Field() # Measure id is in the URL
-    position = scrapy.Field()
+    supporting_committees = scrapy.Field()
+    opposing_committees = scrapy.Field()
 
-class CommitteeLoader(ItemLoader):
-    default_item_class = Committee
-    committeeId_in = MapCompose(clean)
-    committeeName_in = MapCompose(clean)
-    measureName_in = MapCompose(clean)
-    measureId_in = MapCompose(clean)
-    position_in = MapCompose(clean)
+class MeasureLoader(ItemLoader):
+    default_item_class = Measure
+    measureName_in = MapCompose(remove_tags, clean)
+    measureId_in = MapCompose(to_int)
+    support_in = MapCompose(remove_tags, clean)
+    oppose_in = MapCompose(remove_tags, clean)
 
-class CommitteeYearlyFunding(scrapy.Item):
+class Committee(scrapy.Item):
     committee_id = scrapy.Field()
     committee_name = scrapy.Field()
     election_cycle = scrapy.Field()
@@ -60,8 +59,8 @@ class CommitteeYearlyFunding(scrapy.Item):
     total_expenditures = scrapy.Field()
     ending_cash = scrapy.Field()
 
-class YearlyFundingLoader(ItemLoader):
-    default_item_class = CommitteeYearlyFunding
+class CommitteeLoader(ItemLoader):
+    default_item_class = Committee
     committeeId_in = MapCompose(clean)
     committeeName_in = MapCompose(clean)
     electionCycle_in = MapCompose(clean)
