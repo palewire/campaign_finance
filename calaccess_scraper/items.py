@@ -76,36 +76,17 @@ class ContributionsReceived(scrapy.Item):
     committee_id = scrapy.Field()
     committee_name = scrapy.Field()
     contributors = scrapy.Field()
-    payment_type = scrapy.Field()
-    city = scrapy.Field()
-    state_zip = scrapy.Field()
-    amount = scrapy.Field()
-    trans_date = scrapy.Field()
-    filed_date = scrapy.Field()
-    employer = scrapy.Field()
-    occupation = scrapy.Field()
-    id_number = scrapy.Field()
-    election_cycle = scrapy.Field()
-    trans_no = scrapy.Field()
+    election_year = scrapy.Field() # get from URL
 
 class ContributionsReceivedLoader(ItemLoader):
     default_item_class = ContributionsReceived
     committeeId_in = Compose(to_int)
     committeeName_in = MapCompose(clean)
     contributor_in = MapCompose(clean)
-    paymentType_in = MapCompose(clean)
-    city_in = MapCompose(clean)
-    stateZip_in = MapCompose(clean)
-    amount_in = MapCompose(clean)
-    transDate_in = MapCompose(clean)
-    filedDate_in = MapCompose(clean)
-    employer_in = MapCompose(clean)
-    occupation_in = MapCompose(clean)
-    id_no_in = MapCompose(clean)
-    electionCycle_in = MapCompose(clean)
-    trans_no_in = MapCompose(clean)
+    electionYear_in = MapCompose(clean)
 
 class ContributionsMade(scrapy.Item):
+    committee_id = scrapy.Field()
     committee_name = scrapy.Field()
     date = scrapy.Field()
     payee = scrapy.Field()
@@ -117,6 +98,7 @@ class ContributionsMade(scrapy.Item):
 
 class ContributionsMadeLoader(ItemLoader):
     default_item_class = ContributionsMade
+    committeeId_in = Compose(to_int)
     committeeName_in = MapCompose(clean)
     date_in = MapCompose(clean)
     payee_in = MapCompose(clean)
