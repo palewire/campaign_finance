@@ -2,8 +2,9 @@
 import scrapy
 from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
-from calaccess_scraper.items import ElectionLoader
+from calaccess_scraper.items import ElectionLoader, MeasureLoader, CommitteeLoader
 import re
+from w3lib.html import remove_tags
 
 class BallotMeasuresSpider(CrawlSpider):
     name = 'ballot-measures'
@@ -20,7 +21,7 @@ class BallotMeasuresSpider(CrawlSpider):
     
     def get_elections(self, response): # Get all measures from first page
         measures = response.xpath('//table//a/text()').extract()[21:] # Returns a list of all measures and committees
-        links = response.xpath('//table//a/@href').extract()[21:] # Getting the committee funding info too
+        links = response.xpath('//table//a/@href').extract()[21:] 
         d = {}
         for i in range(0,len(measures)):
             d[measures[i]] = links[i]
@@ -41,25 +42,63 @@ class BallotMeasuresSpider(CrawlSpider):
 
     def get_measures(self, response): # If the committe exists, get committee ID, name, and position
         committee_names = response.xpath('//table//a[@class = "sublink2"]/text()').extract()
-        id_pos = response.xpath('//table//span[@class="txt7"]').extract()
+        id_pos = response.xpath('//table//span[@class="txt7"]/text()').extract()
         positions = id_pos[1::2]
         committee_ids = id_pos[0::2]
         support = []
         oppose = []
 
         for i in range(0,len(positions)):
-            if positions[i] == 'OPPOOSE':
-                oppose.append({committee_names[i] : committee_ids[i]})
+            if positions[i] == 'OPPOSE':
+                oppose.append({'committee_id' : committee_ids[i], 'committee_name' : committee_names[i]})
             elif positions[i] == 'SUPPORT':
-                support.append({committee_names[i] : committee_ids[i]})
+                support.append({'committee_id' : committee_ids[i], 'committee_name' : committee_names[i]})
         
         l = MeasureLoader(response=response)
-        l.add_xpath('measure_name', '//span[@id="measureName"]')
+        l.add_xpath('measure_name', '//span[@id="measureName"]/text()')
         l.add_value('measure_id', re.search("id=(.*)\&", response.url).group(1))
         l.add_value('supporting_committees', support)
         l.add_value('opposing_committees', oppose)
         return l.load_item()
 
-    def committee_contribs(self, response): # Get contributions made by committee, found on /Campaign/Committees url
+    def get_committees(self, response): # Get contributions made by committee, found on /Campaign/Committees url
+        summary = remove_tags(response.xpath('//table//td[@width="50%"]').extract())
+        
+        l = CommitteeLoader(response=response)
+        l.add_xpath('committee_id', '//span[@id="_ctl3_lblFilerId"]/text()')
+        l.add_xpath('committee_name', '//span[@id="lblFilerName"]/text()')
+        l.add_value('election_cycle', response.url[-4:])
+        l.add_xpath('historical_names', '//table[@id="_ctl3_names"]//td/text()')
+        l.add_value('status', summary[1])
+        l.add_value('reporting_period', summary[5])
+        l.add_value('current_contributions', summary[7])
+        l.add_value('year_contributions', summary[9])
+        l.add_value('current_expenditures', summary[11])
+        l.add_value('year_expenditures', summary[13])
+        l.add_value('ending_cash', sumary[15])
+        return l.load_item()
+
+    def get_contribs_received(self, response):
+        table = map(remove_tags, response.xpath('//table[@bordercolor="#3149aa"]//tr[@bgcolor="#fdefd3"]//td').extract())
+        #table = filter(None, table) # get table of all contributors
+        #table = filter(lambda c: u'\xa0' not in c, n)
+        contributors = table[0::12]
+        payments = table[1::12]
+
+        l = ContributionsReceivedLoader(response=response)
+        l.add_value('committee_id', re.search("(?<=id=)(.*)(?=&session)", response.url).group(1))
+        l.add_xpath('committee_name', '//span[@id="lblFilerName"]/text()')
+
+        return l.load_item()
+
+    def get_contribs_made(self, response):
+        pass    
+
+    def get_expenditures(self, response):
         pass
 
+    def get_late_funding(self, response):
+        pass
+
+    def get_electronic_filings(self, response):
+        pass

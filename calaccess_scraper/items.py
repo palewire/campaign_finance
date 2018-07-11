@@ -33,15 +33,14 @@ class ElectionLoader(ItemLoader):
     measures_in = MapCompose(clean)
 
 class Measure(scrapy.Item):
-    committee_name = scrapy.Field()
     measure_name = scrapy.Field()
     measure_id = scrapy.Field() # Measure id is in the URL
     supporting_committees = scrapy.Field()
     opposing_committees = scrapy.Field()
 
-class MeasureLoader(ItemLoader):
+class MeasureLoader(ItemLoader): # TODO: Fix loaders, not preprocessing text correctly
     default_item_class = Measure
-    measureName_in = MapCompose(remove_tags, clean)
+    measureName_in = Compose(clean)
     measureId_in = MapCompose(to_int)
     support_in = MapCompose(remove_tags, clean)
     oppose_in = MapCompose(remove_tags, clean)
@@ -54,28 +53,29 @@ class Committee(scrapy.Item):
     status = scrapy.Field()
     reporting_period = scrapy.Field()
     current_contributions = scrapy.Field()
-    total_contributions = scrapy.Field()
+    year_contributions = scrapy.Field() 
     current_expenditures = scrapy.Field()
-    total_expenditures = scrapy.Field()
+    year_expenditures = scrapy.Field()
     ending_cash = scrapy.Field()
 
 class CommitteeLoader(ItemLoader):
     default_item_class = Committee
-    committeeId_in = MapCompose(clean)
+    committeeId_in = Compose(to_int)
     committeeName_in = MapCompose(clean)
     electionCycle_in = MapCompose(clean)
     historicalNames_in = MapCompose(clean)
     status_in = MapCompose(clean)
-    reportingPeriod_in = MapCompose(clean)
+    reportingPeriod_in = MapCompose()
     currContribs_in = MapCompose(clean)
-    totalContribs_in = MapCompose(clean)
+    yearContribs_in = MapCompose(clean)
     currExpend_in = MapCompose(clean)
-    totalExpend_in = MapCompose(clean)
+    yearExpend_in = MapCompose(clean)
     endingCash_in = MapCompose(clean)
 
 class ContributionsReceived(scrapy.Item):
+    committee_id = scrapy.Field()
     committee_name = scrapy.Field()
-    contributor = scrapy.Field()
+    contributors = scrapy.Field()
     payment_type = scrapy.Field()
     city = scrapy.Field()
     state_zip = scrapy.Field()
@@ -90,6 +90,7 @@ class ContributionsReceived(scrapy.Item):
 
 class ContributionsReceivedLoader(ItemLoader):
     default_item_class = ContributionsReceived
+    committeeId_in = Compose(to_int)
     committeeName_in = MapCompose(clean)
     contributor_in = MapCompose(clean)
     paymentType_in = MapCompose(clean)
