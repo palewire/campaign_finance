@@ -88,80 +88,60 @@ class ContributionsReceivedLoader(ItemLoader):
 class ContributionsMade(scrapy.Item):
     committee_id = scrapy.Field()
     committee_name = scrapy.Field()
-    date = scrapy.Field()
-    payee = scrapy.Field()
-    contest = scrapy.Field()
-    position = scrapy.Field()
-    payment_type = scrapy.Field()
-    amount = scrapy.Field()
-    election_cycle = scrapy.Field()
+    contributions = scrapy.Field()
+    election_year = scrapy.Field()
 
 class ContributionsMadeLoader(ItemLoader):
     default_item_class = ContributionsMade
     committeeId_in = Compose(to_int)
     committeeName_in = MapCompose(clean)
-    date_in = MapCompose(clean)
-    payee_in = MapCompose(clean)
-    contest_in = MapCompose(clean)
-    position_in = MapCompose(clean)
-    paymentType_in = MapCompose(clean)
-    amount_in = MapCompose(clean)
-    electionCycle_in = MapCompose(clean)
+    contributions = MapCompose(clean)
+    electionYear_in = MapCompose(clean)
 
 class ExpendituresMade(scrapy.Item):
-    date = scrapy.Field()
-    payee = scrapy.Field()
-    expenditure_code = scrapy.Field()
-    description = scrapy.Field()
-    amount = scrapy.Field()
-    election_cycle = scrapy.Field()
+    election_year = scrapy.Field()
+    committee_id = scrapy.Field()
     committee_name = scrapy.Field()
+    expenditure = scrapy.Field()
 
 class ExpenditureLoader(ItemLoader):
     default_item_class = ExpendituresMade
-    date_in = MapCompose(clean)
-    payee_in = MapCompose(clean)
-    expenditureCode_in = MapCompose(clean)
-    description_in = MapCompose(clean)
-    amount_in = MapCompose(clean)
-    electionCycle_in = MapCompose(clean)
+    electionYear_in = Compose(to_int)
+    committeeId_in = Compose(to_int)
     committeeName_in = MapCompose(clean)
+    expenditure_in = MapCompose(clean)
 
 class LateFunding(scrapy.Item):
     committee_name = scrapy.Field()
-    contributor_name = scrapy.Field()
-    city = scrapy.Field()
-    state_zip = scrapy.Field()
-    id_number = scrapy.Field()
-    employer = scrapy.Field()
-    occupation = scrapy.Field()
-    amount = scrapy.Field()
-    expenditure_type = scrapy.Field()
-    trans_date = scrapy.Field()
-    filed_date = scrapy.Field()
-    trans_no = scrapy.Field()
-    election_cycle = scrapy.Field()
-    funding_type = scrapy.Field() # LateContributionsMade, LateExpendituresMade, LateExpendituresPlus5000
+    committee_id = scrapy.Field()
+    election_year = scrapy.Field()
+    funding_type = scrapy.Field() # LateContributionsMade, LateExpendituresPlus5000
+    contributions = scrapy.Field()
 
 class LateFundingLoader(ItemLoader):
     default_item_class = LateFunding
     committeeName_in = MapCompose(clean)
-    contributorName_in = MapCompose(clean)
-    cityName_in = MapCompose(clean)
-    stateZip_in = MapCompose(clean)
-    id_no_in = MapCompose(clean)
-    employer_in = MapCompose(clean)
-    occupation_in = MapCompose(clean)
-    amount_in = MapCompose(clean)
-    expenditureType_in = MapCompose(clean)
-    transDate_in = MapCompose(clean)
-    filedDate_in = MapCompose(clean)
-    trans_no_in = MapCompose(clean)
-    electionCycle_in = MapCompose(clean)
+    committeeId_in = Compose(to_int)
+    electionYear_in = MapCompose(clean)
     fundingType_in = MapCompose(clean)
+    contributions_in = MapCompose(clean)
+
+class LateIndependentExpenditures(scrapy.Item):
+    committee_name = scrapy.Field()
+    committee_id = scrapy.Field()
+    election_year = scrapy.Field()
+    lateExpenditures = scrapy.Field()
+
+class LateIndependentExpendituresLoader(ItemLoader):
+    default_item_class = LateIndependentExpenditures
+    committeeName_in = Compose(clean)
+    committeeId_in = Compose(to_int)
+    electionYear_in = Compose(to_int)
+    lateExpenditures_in = MapCompose(clean) # TODO: Clean up amount
 
 class ElectronicFilings(scrapy.Item):
     committee_name = scrapy.Field()
+    committee_id = scrapy.Field()
     election_cycle = scrapy.Field()
     filing_period = scrapy.Field()
     filed_on = scrapy.Field()
@@ -171,6 +151,7 @@ class ElectronicFilings(scrapy.Item):
 class ElectronicFilingsLoader(ItemLoader):
     default_item_class = ElectronicFilings
     committeeName_in = MapCompose(clean)
+    committeeId_in = Compose(to_int)
     electionCycle_in = MapCompose(clean)
     filingPeriod_in = MapCompose(clean)
     filedOn_in = MapCompose(clean)
