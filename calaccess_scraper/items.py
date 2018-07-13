@@ -53,7 +53,7 @@ class Committee(scrapy.Item):
     status = scrapy.Field()
     reporting_period = scrapy.Field()
     current_contributions = scrapy.Field()
-    year_contributions = scrapy.Field() 
+    year_contributions = scrapy.Field()
     current_expenditures = scrapy.Field()
     year_expenditures = scrapy.Field()
     ending_cash = scrapy.Field()
@@ -82,7 +82,7 @@ class ContributionsReceivedLoader(ItemLoader):
     default_item_class = ContributionsReceived
     committeeId_in = Compose(to_int)
     committeeName_in = MapCompose(clean)
-    contributor_in = MapCompose(clean)
+    contributor_in = MapCompose() # TODO: Clean up dicts
     electionYear_in = MapCompose(clean)
 
 class ContributionsMade(scrapy.Item):
@@ -95,7 +95,7 @@ class ContributionsMadeLoader(ItemLoader):
     default_item_class = ContributionsMade
     committeeId_in = Compose(to_int)
     committeeName_in = MapCompose(clean)
-    contributions = MapCompose(clean)
+    contributions = MapCompose() # TODO: Clean values in dicts
     electionYear_in = MapCompose(clean)
 
 class ExpendituresMade(scrapy.Item):
@@ -124,7 +124,7 @@ class LateFundingLoader(ItemLoader):
     committeeId_in = Compose(to_int)
     electionYear_in = MapCompose(clean)
     fundingType_in = MapCompose(clean)
-    contributions_in = MapCompose(clean)
+    contributions_in = MapCompose() # TODO: Clean up values in the dictionaries
 
 class LateIndependentExpenditures(scrapy.Item):
     committee_name = scrapy.Field()
@@ -138,22 +138,3 @@ class LateIndependentExpendituresLoader(ItemLoader):
     committeeId_in = Compose(to_int)
     electionYear_in = Compose(to_int)
     lateExpenditures_in = MapCompose(clean) # TODO: Clean up amount
-
-class ElectronicFilings(scrapy.Item):
-    committee_name = scrapy.Field()
-    committee_id = scrapy.Field()
-    election_cycle = scrapy.Field()
-    filing_period = scrapy.Field()
-    filed_on = scrapy.Field()
-    filing_no = scrapy.Field()
-    filing_type = scrapy.Field()
-
-class ElectronicFilingsLoader(ItemLoader):
-    default_item_class = ElectronicFilings
-    committeeName_in = MapCompose(clean)
-    committeeId_in = Compose(to_int)
-    electionCycle_in = MapCompose(clean)
-    filingPeriod_in = MapCompose(clean)
-    filedOn_in = MapCompose(clean)
-    filing_no_in = MapCompose(clean)
-    filingType_in = MapCompose(clean)
