@@ -49,33 +49,6 @@ class CommitteesSpider(CrawlSpider):
         l.add_value('ending_cash', ending_cash)
         return l.load_item()
     
-    def get_contribs_received(self, response):
-        table = map(remove_tags, response.xpath('//table[@bordercolor="#3149aa"]//tr[@bgcolor="#fdefd3"]//td').extract())
-        #table = filter(None, table) # get table of all contributors
-        #table = filter(lambda c: u'\xa0' not in c, n)
-        contributors = []
-        contributor_names = table[0::12]
-        payments = table[1::12]
-        cities = table[2::12]
-        states = table[3::12]
-        ids = table[4::12]
-        employers = table[5::12]
-        occupations = table[6::12]
-        amounts = table[7::12]
-        trans_dates = table[9::12]
-        field_dates = table[10::12]
-        trans_no = table[11::12]
-
-        for i in range (0, len(contributor_names)):
-            contributors.append({'name' : contributor_names[i], 'payment_type' : payments[i], 'city' : cities[i], 'state' : states[i], 'contributor_id' : ids[i], 'employer' : employers[i], 'occupation' : occupations[i], 'amount' : amounts[i], 'trans_date' : trans_dates[i], 'field_date' : field_dates[i], 'trans_no' : trans_no[i]})
-
-        l = ContributionsReceivedLoader(response=response)
-        l.add_value('committee_id', re.search("(?<=id=)(.*)(?=&session)", response.url).group(1))
-        l.add_xpath('committee_name', '//span[@id="lblFilerName"]/text()')
-        l.add_value('contributors', contributors)
-        l.add_value('election_year', re.search("(?<=session=)(.*)(?=&view)", response.url).group(1))
-        return l.load_item()
-
     def get_contribs_made(self, response):
         table = map(remove_tags, response.xpath('//table[@id="_ctl3_contributions"]//td').extract())
         table = table[6:]
