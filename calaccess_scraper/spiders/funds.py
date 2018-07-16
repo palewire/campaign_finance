@@ -3,6 +3,7 @@ import scrapy
 from calaccess_scraper.items import ContributionsReceivedLoader, ContributionsMadeLoader, ExpenditureLoader, LateFundingLoader, LateIndependentExpendituresLoader
 import re
 from w3lib.html import remove_tags
+from calaccess_scraper.errors import errback_httpbin
 
 class FundsSpider(scrapy.Spider):
     name = 'funds'
@@ -27,17 +28,17 @@ class FundsSpider(scrapy.Spider):
             late_exp = [s for s in hrefs if re.search('(.*)view=late3', s)]
 
             for h in received:
-                yield scrapy.Request('http://'+self.allowed_domains[0]+'/'+h, meta=m, callback=self.get_contribs_received)
+                yield scrapy.Request('http://'+self.allowed_domains[0]+'/'+h, meta=m, callback=self.get_contribs_received, errback=errback_httpbin)
             for h in made:
-                yield scrapy.Request('http://'+self.allowed_domains[0]+'/'+h, meta=m, callback=self.get_contribs_made)
+                yield scrapy.Request('http://'+self.allowed_domains[0]+'/'+h, meta=m, callback=self.get_contribs_made, errback=errback_httpbin)
             for h in exp:
-                yield scrapy.Request('http://'+self.allowed_domains[0]+'/'+h, meta=m, callback=self.get_expenditures)
+                yield scrapy.Request('http://'+self.allowed_domains[0]+'/'+h, meta=m, callback=self.get_expenditures, errback=errback_httpbin)
             for h in late5000:
-                yield scrapy.Request('http://'+self.allowed_domains[0]+'/'+h, meta=m, callback=self.get_late_contributions)
+                yield scrapy.Request('http://'+self.allowed_domains[0]+'/'+h, meta=m, callback=self.get_late_contributions, errback=errback_httpbin)
             for h in late:
-                yield scrapy.Request('http://'+self.allowed_domains[0]+'/'+h, meta=m, callback=self.get_late_contributions)
+                yield scrapy.Request('http://'+self.allowed_domains[0]+'/'+h, meta=m, callback=self.get_late_contributions, errback=errback_httpbin)
             for h in late_exp:
-                yield scrapy.Request('http://'+self.allowed_domains[0]+'/'+h, meta=m, callback=self.get_late_expenditures)
+                yield scrapy.Request('http://'+self.allowed_domains[0]+'/'+h, meta=m, callback=self.get_late_expenditures, errback=errback_httpbin)
 
     def get_contribs_received(self, response):
         table = map(remove_tags, response.xpath('//table[@bordercolor="#3149aa"]//tr[@bgcolor="#fdefd3"]//td').extract())
