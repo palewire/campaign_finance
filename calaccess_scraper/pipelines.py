@@ -27,9 +27,6 @@ class JsonWriterPipeline(object):
         return item
 
 class MongoPipeline(object):
-
-    collection_name = 'scrapy_items'
-
     def __init__(self, mongo_uri, mongo_db):
         self.mongo_uri = mongo_uri # "mongodb://localhost:27020/" Connect to host and port, might need to specify db name
         self.mongo_db = mongo_db # "calaccess-scraper"
@@ -49,6 +46,7 @@ class MongoPipeline(object):
         self.client.close()
 
     def process_item(self, item, spider):
+        self.collection_name = spider.name
         self.db[self.collection_name].insert(dict(item))
         logging.debug("Post added to MongoDB")
         return item
