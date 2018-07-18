@@ -95,8 +95,8 @@ MONGO_DATABASE = "calaccess-scraper"
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
    'calaccess_scraper.pipelines.CalaccessScraperPipeline': 300,
-   'calaccess_scraper.pipelines.MongoPipeline': 800,
-   # 'calaccess_scraper.pipelines.JsonWriterPipeline': 800,
+   # 'calaccess_scraper.pipelines.MongoPipeline': 800,
+   'calaccess_scraper.pipelines.JsonWriterPipeline': 800,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)

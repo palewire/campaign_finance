@@ -21,7 +21,6 @@ class FundsSpider(scrapy.Spider):
         else:
             received = [s for s in hrefs if re.search('(.*)view=received', s)]
             made = [s for s in hrefs if re.search('(.*)view=contributions', s)]
-            print received
             exp = [s for s in hrefs if re.search('(.*)view=expenditures', s)]
             late5000 = [s for s in hrefs if re.search('(.*)view=late1', s)]
             late = [s for s in hrefs if re.search('(.*)view=late2', s)]
