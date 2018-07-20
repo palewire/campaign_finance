@@ -12,7 +12,7 @@
 {"committee_name": "accountability and safety education fund", "committee_id": 1374496, "election_year": "2017"}
 {"committee_name": "access dental plan", "committee_id": 1015922, "election_year": "2017"}
 {"committee_name": "accenture, llp", "committee_id": 1232905, "election_year": "2017"}
-{"committee_name": "accel partners", "committee_id": 1014399, "election_year": "2017"}
+{"committee_name": partners", "committee_id": 1014399, "election_year": "2017"}
 {"committee_name": "abraxis bioscience", "committee_id": 1295501, "election_year": "2017"}
 {"committee_name": "azoff msg entertainment", "committee_id": 1405381, "election_year": "2017"}
 {"committee_name": "azoff msg entertainment", "funding_type": "\r\n    Late Contributions Made\r\n    \r\n", "contributions": [{"city": "novato", "trans_no": "2249267-exp2", "name": "newsom for california governor 2018", "state": "ca / 94949", "employer": "", "contribution_id": "1375287", "amount": "          $15,000.00", "trans_date": "5/11/2018", "filed_date": "5/14/2018", "type": "initial", "occupation": ""}, {"city": "los angeles", "trans_no": "2238073-exp60", "name": "villaraigosa for governor 2018", "state": "ca / 90067", "employer": "", "contribution_id": "1392364", "amount": "          $15,000.00", "trans_date": "4/20/2018", "filed_date": "4/26/2018", "type": "initial", "occupation": ""}], "committee_id": 1405381, "election_year": "2017"}

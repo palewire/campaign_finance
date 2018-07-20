@@ -8,3 +8,4 @@ calaccess-scraper/items.pyc
 calaccess-scraper/settings.pyc
 node_modules/
 backend/secrets.js
+calaccess_scraper/secrets.txt

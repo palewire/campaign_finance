@@ -47,24 +47,20 @@ class ElectionLoader(ItemLoader):
     measures_in = MapCompose(clean)
 
 class Measure(scrapy.Item):
-    measure_name = scrapy.Field(output_processor=TakeFirst())
-    measure_id = scrapy.Field(output_processor=TakeFirst()) # Measure id is in the URL
+    measure_name = scrapy.Field(input_processor=Compose(clean),output_processor=TakeFirst())
+    measure_id = scrapy.Field(input_processor=Compose(to_int),output_processor=TakeFirst()) # Measure id is in the URL
     supporting_committees = scrapy.Field(input_processor=MapCompose(clean_dict))
     opposing_committees = scrapy.Field(input_processor=MapCompose(clean_dict))
 
-class MeasureLoader(ItemLoader): # TODO: Fix loaders, not preprocessing text correctly
+class MeasureLoader(ItemLoader):
     default_item_class = Measure
-    measureName_in = Compose(clean)
-    measureId_in = Compose(to_int)
-    support_in = MapCompose(clean_dict)
-    oppose_in = MapCompose(clean_dict)
 
 class Committee(scrapy.Item):
-    committee_id = scrapy.Field(output_processor=TakeFirst())
-    committee_name = scrapy.Field(output_processor=TakeFirst())
-    election_cycle = scrapy.Field(output_processor=TakeFirst())
-    historical_names = scrapy.Field(serializer=str)
-    status = scrapy.Field(output_processor=TakeFirst())
+    committee_id = scrapy.Field(input_processor=Compose(to_int),output_processor=TakeFirst())
+    committee_name = scrapy.Field(input_processor=Compose(clean),output_processor=TakeFirst())
+    election_cycle = scrapy.Field(input_processor=MapCompose(to_int),output_processor=TakeFirst())
+    historical_names = scrapy.Field(input_processor=MapCompose(clean),serializer=str)
+    status = scrapy.Field(input_processor=Compose(clean),output_processor=TakeFirst())
     reporting_period = scrapy.Field(output_processor=TakeFirst())
     current_contributions = scrapy.Field(output_processor=TakeFirst())
     year_contributions = scrapy.Field(output_processor=TakeFirst())
@@ -74,81 +70,49 @@ class Committee(scrapy.Item):
 
 class CommitteeLoader(ItemLoader):
     default_item_class = Committee
-    committeeId_in = Compose(to_int)
-    committeeName_in = Compose(clean)
-    electionCycle_in = MapCompose(to_int)
-    historicalNames_in = MapCompose(clean)
-    status_in = MapCompose(clean)
-    reportingPeriod_in = MapCompose()
-    currContribs_in = MapCompose(clean)
-    yearContribs_in = MapCompose(clean)
-    currExpend_in = MapCompose(clean)
-    yearExpend_in = MapCompose(clean)
-    endingCash_in = MapCompose(clean)
 
 class ContributionsReceived(scrapy.Item):
-    committee_id = scrapy.Field(output_processor=TakeFirst())
+    committee_id = scrapy.Field(input_processor=Compose(to_int),output_processor=TakeFirst())
     committee_name = scrapy.Field(input_processor=Compose(clean),output_processor=TakeFirst())
     contributors = scrapy.Field(input_processor=MapCompose(clean_dict))
-    election_year = scrapy.Field(output_processor=TakeFirst())
+    election_year = scrapy.Field(input_processor=Compose(to_int),output_processor=TakeFirst())
 
 class ContributionsReceivedLoader(ItemLoader):
     default_item_class = ContributionsReceived
-    committeeId_in = Compose(to_int)
-    committeeName_in = Compose(clean)
-    contributor_in = MapCompose(clean_dict)
-    electionYear_in = MapCompose(clean)
 
 class ContributionsMade(scrapy.Item):
-    committee_id = scrapy.Field(output_processor=TakeFirst())
+    committee_id = scrapy.Field(input_processor=Compose(to_int),output_processor=TakeFirst())
     committee_name = scrapy.Field(input_processor=MapCompose(clean),output_processor=TakeFirst())
     contributions = scrapy.Field(input_processor=MapCompose(clean_dict))
-    election_year = scrapy.Field(output_processor=TakeFirst())
+    election_year = scrapy.Field(input_processor=Compose(to_int),output_processor=TakeFirst())
 
 class ContributionsMadeLoader(ItemLoader):
     default_item_class = ContributionsMade
-    committeeId_in = Compose(to_int)
-    committeeName_in = MapCompose(clean)
-    contributions = MapCompose(clean_dict)
-    electionYear_in = Compose(to_int)
 
 class ExpendituresMade(scrapy.Item):
-    election_year = scrapy.Field(output_processor=TakeFirst())
-    committee_id = scrapy.Field(output_processor=TakeFirst())
+    committee_id = scrapy.Field(input_processor=Compose(to_int),output_processor=TakeFirst())
     committee_name = scrapy.Field(input_processor=MapCompose(clean),output_processor=TakeFirst())
     expenditure = scrapy.Field(input_processor=MapCompose(clean_dict))
+    election_year = scrapy.Field(input_processor=Compose(to_int),output_processor=TakeFirst())
 
 class ExpenditureLoader(ItemLoader):
     default_item_class = ExpendituresMade
-    electionYear_in = Compose(to_int)
-    committeeId_in = Compose(to_int)
-    committeeName_in = MapCompose(clean)
-    expenditure_in = MapCompose(clean_dict)
 
 class LateFunding(scrapy.Item):
-    committee_name = scrapy.Field(input_processor=MapCompose(clean),output_processor=TakeFirst())
     committee_id = scrapy.Field(input_processor=Compose(to_int),output_processor=TakeFirst())
-    election_year = scrapy.Field(output_processor=TakeFirst())
+    committee_name = scrapy.Field(input_processor=MapCompose(clean),output_processor=TakeFirst())
     funding_type = scrapy.Field(input_processor=Compose(clean),output_processor=TakeFirst()) # LateContributionsMade, LateExpendituresPlus5000
     contributions = scrapy.Field(input_processor=MapCompose(clean_dict))
+    election_year = scrapy.Field(input_processor=Compose(to_int),output_processor=TakeFirst())
 
 class LateFundingLoader(ItemLoader):
     default_item_class = LateFunding
-    committeeName_in = Compose(clean)
-    committeeId_in = Compose(to_int)
-    electionYear_in = MapCompose(clean)
-    fundingType_in = MapCompose(clean)
-    contributions_in = MapCompose(clean_dict)
 
 class LateIndependentExpenditures(scrapy.Item):
     committee_name = scrapy.Field(input_processor=MapCompose(clean),output_processor=TakeFirst())
     committee_id = scrapy.Field(input_processor=Compose(to_int),output_processor=TakeFirst())
-    election_year = scrapy.Field(output_processor=TakeFirst())
     lateExpenditures = scrapy.Field(input_processor=MapCompose(clean_dict))
+    election_year = scrapy.Field(input_processor=Compose(to_int),output_processor=TakeFirst())
 
 class LateIndependentExpendituresLoader(ItemLoader):
     default_item_class = LateIndependentExpenditures
-    committeeName_in = MapCompose(clean)
-    committeeId_in = Compose(to_int)
-    electionYear_in = Compose(to_int)
-    lateExpenditures_in = MapCompose(clean_dict) # TODO: Clean up amount

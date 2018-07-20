@@ -6,7 +6,7 @@ from calaccess_scraper.items import ElectionLoader, MeasureLoader
 import re
 
 class BallotMeasuresSpider(CrawlSpider):
-    name = 'ballot-measures'
+    name = 'ballot_measures'
     allowed_domains = ['cal-access.sos.ca.gov']
     start_urls = ['http://cal-access.sos.ca.gov/Campaign/Measures//']
     rules = (
