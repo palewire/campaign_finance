@@ -25,29 +25,29 @@ app.get('/', (req, res) => {
 app.get('/measures', (req,res) => {
   Measure.find((err, measures) => {
     if (err) return res.json({ success: false, error: err});
-    return res.send({success: true, data: measures});
+    return res.send({data: measures});
   });
 });
 
 app.get('/funds', (req,res) => {
   Funds.find((err, funds) => {
     if (err) return res.json({ success: false, error: err});
-    return res.send({success: true, data: funds})
+    return res.send({data: funds})
   });
 });
 
 app.get('/committees', (req,res) => {
   Committees.find((err, committees) => {
     if (err) return res.json({ success: false, error: err});
-    return res.send({success: true, data: committees});
+    return res.send({data: committees});
   });
 });
 
 app.get('/candidates', (req,res) => {
   Candidates.find((err, candidates) => {
     if (err) return res.json({ success: false, error: err});
-    return res.send({success: true, data: candidates});
+    return res.send({data: candidates});
   })
 });
 
-app.listen(API_PORT, ()=> console.log("App listening on port 3001"));
+app.listen(API_PORT, () => console.log("App listening on port 3001"));
