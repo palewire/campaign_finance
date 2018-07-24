@@ -1,12 +1,18 @@
 import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
-// create new instance of the mongoose.schema. the schema takes an
-// object that shows the shape of your database entries.
 const MeasuresSchema = new Schema({
-  author: String,
-  text: String,
-});
+  "_id": Schema.Types.ObjectId,
+  "measure_name": String,
+  "measure_id": Number,
+  "supporting_committees": [{
+    "committee_name": String,
+    "committee_id": Number,
+  }],
+  "opposing_committees": [{
+    "committee_name": String,
+    "committee_id": Number,
+  }],
+}, {collection: "ballot_measures"});
 
-// export our module to use in server.js
 export default mongoose.model('Measure', MeasuresSchema);
