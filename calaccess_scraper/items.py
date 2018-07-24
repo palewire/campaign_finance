@@ -116,3 +116,14 @@ class LateIndependentExpenditures(scrapy.Item):
 
 class LateIndependentExpendituresLoader(ItemLoader):
     default_item_class = LateIndependentExpenditures
+
+class Candidates(scrapy.Item):
+    candidate_id = scrapy.Field(input_processor=Compose(to_int),output_processor=TakeFirst())
+    candidate_name = scrapy.Field(input_processor=Compose(clean),output_processor=TakeFirst())
+    party = scrapy.Field(input_processor=Compose(clean),output_processor=TakeFirst())
+    spending_limits = scrapy.Field(input_processor=MapCompose(clean_dict))
+    races = scrapy.Field(input_processor=MapCompose(clean_dict))
+    committees = scrapy.Field(input_processor=MapCompose(clean_dict))
+
+class CandidatesLoader(ItemLoader):
+    default_item_class = Candidates

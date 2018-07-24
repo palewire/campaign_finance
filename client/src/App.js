@@ -1,23 +1,17 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
+import TabContainer from './TabContainer';
 
 import {
   Icon,
-  Intent,
+  Alignment,
+  Intent, // Accent colors
   Spinner,
-  Card,
   Button,
-  FormGroup,
-  Label,
-  Menu,
-  MenuItem,
-  MenuDivider,
-  Navbar,
-  Alignment
+  Elevation,
+  Navbar
 } from '@blueprintjs/core';
 
-import { Table, Column, Cell } from '@blueprintjs/table';
 import 'normalize.css/normalize.css';
 import '@blueprintjs/core/lib/css/blueprint.css';
 import '@blueprintjs/table/lib/css/table.css';
@@ -36,6 +30,7 @@ class App extends Component {
               <Button className="bp3-minimal" text="Docs" />
           </Navbar.Group>
       </Navbar>
+      <TabContainer />
       </div>
     );
   }

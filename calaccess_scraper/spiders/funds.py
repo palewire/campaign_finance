@@ -41,8 +41,6 @@ class FundsSpider(scrapy.Spider):
 
     def get_contribs_received(self, response):
         table = map(remove_tags, response.xpath('//table[@bordercolor="#3149aa"]//tr[@bgcolor="#fdefd3"]//td').extract())
-        #table = filter(None, table) # get table of all contributors
-        #table = filter(lambda c: u'\xa0' not in c, n)
         contributors = []
         contributor_names = table[0::12]
         payments = table[1::12]

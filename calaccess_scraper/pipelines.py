@@ -47,6 +47,10 @@ class MongoPipeline(object):
 
     def process_item(self, item, spider):
         self.collection_name = spider.name
-        self.db[self.collection_name].insert(dict(item))
-        logging.debug("Post added to MongoDB")
+        i = dict(item)
+        if not self.db[self.collection_name].find(i): # check for duplicates
+            self.db[self.collection_name].insert(i)
+            logging.debug("Post added to MongoDB")
+        else:
+            logging.debug("Item already in database")
         return item
