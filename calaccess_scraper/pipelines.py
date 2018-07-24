@@ -48,7 +48,8 @@ class MongoPipeline(object):
     def process_item(self, item, spider):
         self.collection_name = spider.name
         i = dict(item)
-        if not self.db[self.collection_name].find(i): # check for duplicates
+        # logging.debug("Printing len find(i): " + str((self.db[self.collection_name].find(i).count())))
+        if self.db[self.collection_name].find(i).count() == 0:
             self.db[self.collection_name].insert(i)
             logging.debug("Post added to MongoDB")
         else:
