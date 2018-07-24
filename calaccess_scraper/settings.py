@@ -89,8 +89,11 @@ PROXY_MODE = 0
 #EXTENSIONS = {
 #    'scrapy.extensions.telnet.TelnetConsole': None,
 #}
-MONGO_URI = "mongodb://localhost:27017/"
-MONGO_DATABASE = "calaccess-scraper"
+with open('./secrets.txt', 'r') as f:
+    my_uri=f.read()
+
+MONGO_URI = my_uri
+MONGO_DATABASE = "calaccess_scraper"
 # Configure item pipelines
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {

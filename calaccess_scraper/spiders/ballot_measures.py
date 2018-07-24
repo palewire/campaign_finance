@@ -6,7 +6,7 @@ from calaccess_scraper.items import ElectionLoader, MeasureLoader
 import re
 
 class BallotMeasuresSpider(CrawlSpider):
-    name = 'ballot-measures'
+    name = 'ballot_measures'
     allowed_domains = ['cal-access.sos.ca.gov']
     start_urls = ['http://cal-access.sos.ca.gov/Campaign/Measures//']
     rules = (
@@ -17,11 +17,11 @@ class BallotMeasuresSpider(CrawlSpider):
 
     def get_elections(self, response): # Get all measures from first page
         measures = response.xpath('//table//a/text()').extract()[21:] # Returns a list of all measures and committees
-        links = response.xpath('//table//a/@href').extract()[21:] 
+        links = response.xpath('//table//a/@href').extract()[21:]
         d = {}
         for i in range(0,len(measures)):
             d[measures[i]] = links[i]
-        
+
         elections = response.xpath('//table//caption//span/text()').extract()
         no_measures = response.xpath('//table//font[@color = "White"]/text()').extract()
         no_measures = list(map(lambda x: int(''.join(x)), list(map(lambda n: [c for c in n if c.isdigit()], no_measures))))
@@ -33,8 +33,10 @@ class BallotMeasuresSpider(CrawlSpider):
             if i == 0:
                 l.add_value('measures', measures[i:no_measures[i]])
             else:
-                l.add_value('measures', measures[sum(no_measures[:i])+1 : no_measures[i]+sum(no_measures[:i])+1]) 
+                l.add_value('measures', measures[sum(no_measures[:i])+1 : no_measures[i]+sum(no_measures[:i])+1])
             yield l.load_item()
+
+    # TODO: Check if each function can write in different documents
 
     def get_measures(self, response): # If the committe exists, get committee ID, name, and position
         committee_names = response.xpath('//table//a[@class = "sublink2"]/text()').extract()
@@ -49,7 +51,7 @@ class BallotMeasuresSpider(CrawlSpider):
                 oppose.append({'committee_id' : committee_ids[i], 'committee_name' : committee_names[i]})
             elif positions[i] == 'SUPPORT':
                 support.append({'committee_id' : committee_ids[i], 'committee_name' : committee_names[i]})
-        
+
         l = MeasureLoader(response=response)
         l.add_xpath('measure_name', '//span[@id="measureName"]/text()')
         l.add_value('measure_id', re.search("id=(.*)\&", response.url).group(1))
