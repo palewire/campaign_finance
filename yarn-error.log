@@ -1,5 +1,5 @@
 Arguments: 
-  /usr/local/Cellar/node/10.6.0/bin/node /usr/local/Cellar/yarn/1.5.1_1/libexec/bin/yarn.js start
+  /usr/local/Cellar/node/10.6.0/bin/node /usr/local/Cellar/yarn/1.5.1_1/libexec/bin/yarn.js dev:start
 
 PATH: 
   /usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/Applications/Postgres.app/Contents/Versions/latest/bin
@@ -18,6 +18,12 @@ npm manifest:
     "name": "calaccess-scraper",
     "version": "1.0.0",
     "main": "index.js",
+    "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1",
+      "start:server": "cd backend && nodemon server.js --exec babel-node --presets es2015,stage-0",
+      "start:client": "cd client && yarn start",
+      "start:dev": "concurrently \"yarn start:server\" \"yarn start:client\""
+    },
     "repository": "https://github.com/CALmatters/campaign_finance.git",
     "author": "vcabales <vcabales96@gmail.com>",
     "license": "MIT",
@@ -3127,7 +3133,7 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/yallist/-/yallist-3.0.2.tgz#8452b4bb7e83c7c188d8041c1a837c773d6d8bb9"
 
 Trace: 
-  Error: Command "start" not found.
+  Error: Command "dev:start" not found.
       at new MessageError (/usr/local/Cellar/yarn/1.5.1_1/libexec/lib/cli.js:186:110)
       at /usr/local/Cellar/yarn/1.5.1_1/libexec/lib/cli.js:87307:17
       at Generator.next (<anonymous>)
