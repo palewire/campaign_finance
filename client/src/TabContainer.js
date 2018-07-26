@@ -1,6 +1,5 @@
 import * as React from 'react';
 import './TabContainer.css';
-import axios from 'axios';
 
 import {
   Icon,
@@ -17,44 +16,53 @@ import {
 import 'normalize.css/normalize.css';
 import '@blueprintjs/core/lib/css/blueprint.css';
 import '@blueprintjs/table/lib/css/table.css';
+import VizContainer from './VizContainer';
 
-axios.get('/measures') // Use Axios to get data from server
-  .then((res) => {
-    console.log(res.data);
-  });
+class BallotMeasuresPanel extends React.Component { // TODO: Include search measures
+  render() {
+    return (
+      <div>
+          <H3>Ballot Measures Panel</H3>
+          <Card interactive={false} elevation={Elevation.TWO}>
+              <h5>Card heading</h5>
+              <VizContainer />
+              <Button>Submit</Button>
+          </Card>
+      </div>
+    );
+  }
+}
 
-const BallotMeasuresPanel: React.SFC<{}> = () => (
-    <div>
-        <H3>Ballot Measures Panel</H3>
+class CandidatesPanel extends React.Component { // TODO: Include search candidates
+  render() {
+    return (
+      <div>
+        <H3>Candidates Panel</H3>
         <Card interactive={false} elevation={Elevation.TWO}>
-            <h5><a href="#">Card heading</a></h5>
+            <h5>Card heading</h5>
             <p>Card content</p>
             <Button>Submit</Button>
         </Card>
-    </div>
-);
+      </div>
+    );
+  }
+}
 
-const CandidatesPanel: React.SFC<{}> = () => (
-    <div>
-      <H3>Candidates Panel</H3>
-      <Card interactive={false} elevation={Elevation.TWO}>
-          <h5><a href="#">Card heading</a></h5>
-          <p>Card content</p>
-          <Button>Submit</Button>
-      </Card>
-    </div>
-);
 
-const ExpendituresPanel: React.SFC<{}> = () => (
-  <div>
-    <H3>Independent Expenditures Panel</H3>
-    <Card interactive={false} elevation={Elevation.TWO}>
-        <h5><a href="#">Card heading</a></h5>
-        <p>Card content</p>
-        <Button>Submit</Button>
-    </Card>
-  </div>
-);
+class ExpendituresPanel extends React.Component { // TODO: Include search expenditures
+  render() {
+    return(
+      <div>
+        <H3>Independent Expenditures Panel</H3>
+        <Card interactive={false} elevation={Elevation.TWO}>
+            <h5>Card heading</h5>
+            <p>Card content</p>
+            <Button>Submit</Button>
+        </Card>
+      </div>
+    );
+  }
+}
 
 // TODO: Write handleTabChange
 
