@@ -3,7 +3,7 @@ This project was built at [CALmatters](https://calmatters.org/) to make Californ
 
 ## Getting Started
 
-The scraper was built in Python 2.7 using the web crawling framework [Scrapy](https://scrapy.org/) and pip. The dashboard was built using Mongo, Express, React, and Node.
+The scraper was built in Python 2.7 using the web crawling framework [Scrapy](https://scrapy.org/). The dashboard was built using Mongo, Express, React, and Node.
 
 #### 0. Prerequisites
 
